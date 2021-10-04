@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import CommonTable from '../../component/table/CommonTable';
 import CommonTableColumn from '../../component/table/CommonTableColumn';
 import CommonTableRow from '../../component/table/CommonTableRow';
-import {dummyPostList, postList} from '../../Data' 
+import {dummyPostList} from '../../Data' 
 import axios from 'axios';
 
 const PostList = props => {
@@ -14,8 +14,14 @@ useEffect(() => {
     'http://localhost:8000/realestate/list'
   ).then(res => {
     console.log(res)
-    dataList = res.data ? res.data : dummyPostList;
-    setDataList(dataList);
+    if (res.data && res.data.length > 0) {
+      setDataList(res.data);
+    } else {
+      setDataList(dummyPostList);
+    }
+  }).catch(err => {
+    alert(err);
+    setDataList(dummyPostList);
   });
  
 }, [])

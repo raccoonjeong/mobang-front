@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Route exact path='/postView/:no' component={PostView}></Route>
+        <Route exact path='/postView/:id' component={PostView}></Route>
         <Route exact path='/' component={PostMain}></Route>
       </BrowserRouter>
     </div>

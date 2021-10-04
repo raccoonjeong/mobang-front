@@ -1,14 +1,39 @@
 import React, {useEffect, useState} from 'react';
-import {getPostByNo} from '../../Data';
+import {dummyPostList} from '../../Data' 
 import './Post.css'
- 
+import axios from 'axios';
+
 const PostView = ({history, location, match}) => {
   const [data, setData] = useState({});
   const {id} = match.params;
+  // useEffect(() => {
+  //   console.log(dataList);
+  //   // const array = dataList.filter(x => x.id == id);
+  //   // if (array.length == 1) {
+  //   //   console.log(array);
+  //   //   return array[0];
+  //   //   setData(array[0]);
+  //   // }
+      
+  //   // setData(getPostById(id))
+  // }, []);
 
   useEffect(() => {
-    setData(getPostByNo(id))
-  }, []);
+    const response = axios.get(
+      `http://localhost:8000/realestate/detail?id=${id}`
+    ).then(res => {
+      console.log(res)
+      if (res.data && res.data.id == id) {
+        setData(res.data);
+      } else {
+        setData(dummyPostList[0]);
+      }
+    }).catch(err => {
+      alert(err);
+      setData(dummyPostList[0]);
+    });
+  
+  }, [])
 	 
   return (
     <>
@@ -19,28 +44,28 @@ const PostView = ({history, location, match}) => {
           data ? (
             <>
               <div className="post-view-row">
-                <label>게시글 번호</label>
-                <label>{ data.no }</label>
+                <label>번호</label>
+                <label>{ data.id }</label>
               </div>
               <div className="post-view-row">
-                <label>제목</label>
-                <label>{ data.title }</label>
+                <label>지역</label>
+                <label>{ data.area }</label>
+              </div>
+              <div className="post-view-row">
+                <label>주소</label>
+                <label>{ data.address }</label>
+              </div>
+              <div className="post-view-row">
+                <label>매매가</label>
+                <label>{ data.salePrice }</label>
               </div>
               <div className="post-view-row">
                 <label>작성일</label>
-                <label>{ data.createDate }</label>
+                <div>{ data.regDate }</div>
               </div>
               <div className="post-view-row">
-                <label>조회수</label>
-                <label>{ data.readCount }</label>
-              </div>
-              <div className="post-view-row">
-                <label>내용</label>
-                <div>
-                  {
-                    data.content
-                  }
-                </div>
+                <label>수정일</label>
+                <label>{ data.modDate }</label>
               </div>
             </>
           ) : '해당 게시글을 찾을 수 없습니다.'
